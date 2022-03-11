@@ -3,6 +3,8 @@ services:
     db:
       container_name: eudb
       image: mysql:latest
+      networks:
+      - eutravel-mysql
       ports:
        - "3307:3306"  
       environment:
@@ -18,6 +20,8 @@ services:
     phpmyadmin:
       image: phpmyadmin/phpmyadmin:latest
       container_name: my-php-myadmin
+      networks:
+      - eutravel-mysql
       ports:
         - "8082:80"
       restart: always
@@ -27,3 +31,24 @@ services:
       environment:
         SPRING_DATASOURCE_USERNAME: root
         SPRING_DATASOURCE_PASSWORD: mysql
+ #service 3: definition of springboot eurtravel
+    customerservice:                        #it is just a name, which will be used only in this file.
+      image: eutravel-service               #name of the image after dockerfile executes
+      container_name: eutravel-service-app  #name of the container created from docker image
+      build:
+        context: .                          #docker file path (. means root directory)
+        dockerfile: eutravel2.dockerfile    #docker file name
+      networks:
+      - eutravel-mysql
+      ports:
+        - "8084:8084"                       #docker containter port with your os port
+      restart: always
+        
+      depends_on:                           #define dependencies of this app
+        - db                                #dependency name (which is defined with this name 'db' in this file earlier)
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://eudb/eutravel
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: mysql
+networks:
+  eutravel-mysql:
