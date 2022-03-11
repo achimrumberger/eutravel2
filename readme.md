@@ -25,11 +25,28 @@ docker stuff:
 
 - there is a docker file for the spring boot app **eutravel2.dockerfile**
 which basically just copies and runs the jar file to the docker container
-- the docker compose file **doc.yml** starts a mysql database and imports the sql dump. If you want to run this skript on your machine point this directory to the place where the dump resides: **/home/achim/Dokumente/mysql/init**
+- the docker compose file **doc.yml** starts a mysql database and imports the sql dump. 
+- If you want to run this skript, it might be necessary to replace the relative path to the directory the dump resides: **./init** with the respective absolute path to this file on your machine
 - The script also builds and starts the spring boot container app. 
-- In addition a phpmyadmin cotainer is added to allow you to have an easier look at the database
+- In addition a phpmyadmin cotainer is added to allow the user to have an easier look at the database
 
 **Note**
 
 It was important to explicitly define a network in the docker compose file or otherwise the spring boot app couldn't connect to the database.
 
+**Test the Application**
+
+curl http://localhost:8084/eutravel/stationbyname?name=Kirchheim
+
+```
+curl -X POST http://localhost:8084/eutravel/connections \
+   -H 'Content-Type: application/json' \
+   -d '{
+	"startStation":"Kirchheim (Teck)",
+	"destinationStation":"Stuttgart Hbf",
+	"travelStartTime":"12:00",
+	"travelStartDate":"03/06/2022",
+	"tariffClass":"1",	
+	"numberOfTravellers":"1"
+}'
+```
