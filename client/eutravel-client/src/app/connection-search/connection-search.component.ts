@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { debounceTime, finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
+import {formatDate} from '@angular/common';
 
 import { Connection
  } from '../connection';
@@ -110,6 +111,7 @@ export class ConnectionSearchComponent implements OnInit {
 
   searchConnections():void {
     console.log(this.travelDate);
+    console.log(formatDate(this.travelDate,'dd/MM/yyyy', 'en-DE'));
     console.log(this.travelTime);
     console.log(this.numberOfTRavellers);
     console.log(this.tariffClass);
@@ -119,7 +121,7 @@ export class ConnectionSearchComponent implements OnInit {
     const conny = new Connection(
         this.searchDepartureStationsCtrl.value,
         this.searchDestinationStationsCtrl.value,
-        '03/06/2022',//this.travelDate'',
+        formatDate(this.travelDate,'dd/MM/yyyy', 'en-DE'),//this.travelDate'',
         this.travelTime,
         this.numberOfTRavellers,
         this.tariffClass
