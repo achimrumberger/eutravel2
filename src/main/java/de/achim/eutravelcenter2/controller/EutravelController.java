@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,11 +42,27 @@ public class EutravelController {
 		return sdr.findByNameQuery(name);
 
 	}
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value ="/stationsearch", produces = MediaType.APPLICATION_JSON_VALUE)
+	public  @ResponseBody Iterable<String> getStationListSearch(
+			@RequestParam String name) {
+		System.out.println(name);
+		Iterable<StationDAO> stationDaoList = sdr.findByNameQuery(name);
+		
+		List<String> stationNameList = new ArrayList<>();
+		stationDaoList.forEach(sdl -> stationNameList.add(sdl.getName()));
+		
+		return stationNameList;
+	}
 
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/connections")
 	public List<String> requestConnection(@RequestBody ConnectionRequestDAO connections){
 		List<String> connenctionLinks = new ArrayList<>();
-
+System.out.println(connections.getStartStation());
+System.out.println(connections.getDestinationStation());
+System.out.println(connections.getTravelStartDate());
+System.out.println(connections.getTravelStartTime());
 		try {
 			StationDAO startStationDAO = sdr.findByNameQuery(connections.getStartStation()).iterator().next();
 			StationDAO destinationStationDAO = sdr.findByNameQuery(connections.getDestinationStation()).iterator().next();
