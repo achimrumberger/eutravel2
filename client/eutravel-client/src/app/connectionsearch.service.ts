@@ -13,9 +13,12 @@ export class ConnectionsearchService {
   findsConnections(con: Connection):Observable<String[]> {
     console.log(con.destinationStation);
     console.log(con.startStation);
-    const url = 'http://localhost:8084/eutravel/connections';
+    //eutravel-service-app
+    const url = 'http://eutravel-service-app/eutravel/connections';
+    //const url = 'http://localhost:8084/eutravel/connections';
     const headers = new HttpHeaders()
-    .set('Content-Type', 'application/json');
+    .append('Content-Type', 'application/json')
+    .append('Access-Control-Allow-Origin', '*');
     const body=JSON.stringify(con);
     console.log('------------------');
     console.log(body);

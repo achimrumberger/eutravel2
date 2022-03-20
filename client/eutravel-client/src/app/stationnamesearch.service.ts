@@ -10,10 +10,13 @@ export class StationnamesearchService {
   constructor(private http: HttpClient) { }
 
   findstation(name: string):Observable<String[]> {
-    const url = 'http://localhost:8084/eutravel/stationsearch';
+    //eutravel-service-app
+    const url = 'http://eutravel-service-app/eutravel/stationsearch';
+    //const url = 'http://localhost:8084/eutravel/stationsearch';
     const headers = new HttpHeaders()
-    .set('Accept', 'application/json');
+    .append('Accept', 'application/json')
+    .append('Access-Control-Allow-Origin', '*');
     const params = new HttpParams().set('name', name);
-    return this.http.get<String[]>(url, {params});
+    return this.http.get<String[]>(url, {headers, params});
   }
 }

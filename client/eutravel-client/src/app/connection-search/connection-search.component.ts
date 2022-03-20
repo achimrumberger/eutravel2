@@ -140,16 +140,6 @@ export class ConnectionSearchComponent implements OnInit {
         console.error('Error', err);
     }
   });
-    /**
-     * {
-	"startStation":"Kirchheim (Teck)",
-	"destinationStation":"Stuttgart Hbf",
-	"travelStartTime":"12:00",
-	"travelStartDate":"03/06/2022",
-	"tariffClass":"1",
-	"numberOfTravellers":"1"
-}
-     */
 
   }
 
