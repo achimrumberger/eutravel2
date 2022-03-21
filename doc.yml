@@ -54,8 +54,8 @@ services:
         
     #service 4: definition of angular client for eurtravel
     clientapp:
-      image: eutravel-client2
-      container_name: eutravel-client-app2
+      image: eutravel-client
+      container_name: eutravel-client-app
       build:
         context: .
         dockerfile: client-app.dockerfile
@@ -65,7 +65,7 @@ services:
         - "4200:80"
       restart: always
       depends_on:
-        - customerservice
- 
+        - customerservice        
+
 networks:
   eutravel-mysql: 
