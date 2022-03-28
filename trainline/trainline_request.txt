@@ -1,0 +1,15 @@
+https://www.thetrainline.com/book/results
+?journeySearchType=single
+&origin=69b59b70a73b72302eff45627aeef377
+&destination=0568af82f253ea38d96fec9105b1cd87
+&outwardDate=2022-03-23T13%3A30%3A00
+&outwardDateType=departAfter
+&selectedTab=train
+&selectExactTime=true
+&lang=en
+&dpiCookieId=PUROWZ1JCPT3UVB8PN7K0QLR5
+&selectedOutward=FkxW8coMUMI%3D%3AYex86DPAHeM%3D%2CC0cTkHppc6c%3D%3AStandard
+
+
+69b 59b 70a 73b 72 30 2eff45627aeef377
+Paris Montparnasse

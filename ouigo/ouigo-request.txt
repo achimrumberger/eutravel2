@@ -1,0 +1,17 @@
+
+https://www.ouigo.com/  france
+https://ventes.ouigo.com/fr-FR/orientation/deep-edito/
+?target=routes
+&origin=87686006
+&destination=87722025
+&outboundDate=2022-03-22
+&passengers%5B0%5D%5Btype%5D=A
+
+https://www.ouigo.com/  spain
+https://ventas.ouigo.com/en-GB/_deeplink/journey-search
+?origin=7171801
+&destination=7160000
+&contrast=0
+&outboundDate=2022-03-22
+&passengers%5b0%5d%5btype%5d=A
+&passengers%5b0%5d%5bdisability_type%5d=NH

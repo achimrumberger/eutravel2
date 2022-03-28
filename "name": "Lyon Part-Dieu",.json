@@ -1,0 +1,19 @@
+"name": "Lyon Part-Dieu",
+		"slug": "lyon-part-dieu",
+		"uic": "8772319",
+		"uic8_sncf": "87723197",
+		"latitude": "45.760559",
+		"longitude": "4.859355",
+
+        "name": "Perpignan",
+		"slug": "perpignan",
+		"uic": "8778400",
+		"uic8_sncf": "87784009",
+		"latitude": "42.696292",
+		"longitude": "2.879779",
+
+
+        https://api.navitia.io/v1/coverage/sandbox/journeys?from=4.8593550%3B45.7605590&to=2.8797790%3B42.6962920&
+        https://api.navitia.io/v1/coverage/sandbox/journeys?from=2.3749036%3B48.8467927&to=2.2922926%3B48.8583736&
+
+        

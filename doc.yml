@@ -69,3 +69,4 @@ services:
 
 networks:
   eutravel-mysql: 
+    driver: bridge
