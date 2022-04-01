@@ -20,7 +20,13 @@ public class NavitiaService {
 
 	@Value( "${nativia.authtoken}" )
 	private String authToken;
-	
+
+	private final RestTemplate restTemplate;
+
+	public NavitiaService(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
+
 	public JsonNode findCoordinatesForStation(String stationName) throws Exception, JsonProcessingException {
 		//https://api.navitia.io/v1/places?q=Gare de Lyon&
 		//https://api.navitia.io/v1/coverage/fr-idf/places?q=Gare de Lyon&
@@ -60,7 +66,7 @@ public class NavitiaService {
 
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
-		RestTemplate restTemplate = new RestTemplate();
+		//		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response
 		= restTemplate.exchange(nativaURL,HttpMethod.GET, entity ,String.class);
 		ObjectMapper mapper = new ObjectMapper();
