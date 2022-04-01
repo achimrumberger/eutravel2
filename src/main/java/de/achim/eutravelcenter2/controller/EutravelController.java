@@ -2,6 +2,7 @@ package de.achim.eutravelcenter2.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import de.achim.eutravelcenter2.dao.ConnectionRequestDAO;
 import de.achim.eutravelcenter2.dao.StationDAO;
 import de.achim.eutravelcenter2.dbahn.BahnRequestService;
+import de.achim.eutravelcenter2.navitia.NavitiaService;
 import de.achim.eutravelcenter2.repository.StationDAORepository;
 import de.achim.eutravelcenter2.utils.BahnUtils;
+import de.achim.eutravelcenter2.navitia.ParseNavitiaResponse;
 
 @RestController
 @RequestMapping(path="/eutravel")
@@ -29,6 +34,9 @@ public class EutravelController {
 	
 	@Autowired
 	private BahnRequestService brs;
+	
+	@Autowired
+	private NavitiaService service;
 
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<StationDAO> getAllStations(){
@@ -90,6 +98,16 @@ System.out.println(connections.getTravelStartTime());
 		}
 
 		return connenctionLinks;
+	}
+	
+	
+	
+	@RequestMapping(path="/coordinates", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, String> getStationCooridnates(@RequestParam String name) throws Exception, Exception{
+		System.out.println("search name" + name);
+		JsonNode root = service.findCoordinatesForStation(name);
+		Map<String, String>map = ParseNavitiaResponse.parseRegionsResponse(root);
+		return map;
 	}
 
 }

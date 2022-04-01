@@ -13,11 +13,8 @@ import com.fasterxml.jackson.databind.node.ValueNode;
 
 public class ParseNavitiaResponse {
 	
-	public ParseNavitiaResponse() {
-		
-	}
 	
-	public Map<String, String> parseCoordResponse(JsonNode root) {
+	public static Map<String, String> parseCoordResponse(JsonNode root) {
 		Map<String, String> resultMap = new HashMap<>();
 		String regionid = "";
 		JsonNode regions =root.findPath("regions");
@@ -35,13 +32,13 @@ public class ParseNavitiaResponse {
 	
 	}
 	
-	public List<Map> parseConnectionsResponse(JsonNode root) {
+	public static List<Map> parseConnectionsResponse(JsonNode root) {
 		JsonNode journeyNode = root.findPath("journeys");
-		List<Map> resultList = this.findArrivalDateTime(journeyNode);
+		List<Map> resultList = findArrivalDateTime(journeyNode);
 		return resultList;
 	}
 	
-	public Map<String, String> parseRegionsResponse(JsonNode root) {
+	public static Map<String, String> parseRegionsResponse(JsonNode root) {
 		Map<String, String> resultMap = new HashMap<>();
 		String lat =root.findPath("coord").findPath("lat").textValue();
 		String lon =root.findPath("coord").findPath("lon").textValue();
@@ -50,7 +47,7 @@ public class ParseNavitiaResponse {
 		return resultMap;
 	}
 	
-	private List<Map> findArrivalDateTime(JsonNode node) {
+	private static List<Map> findArrivalDateTime(JsonNode node) {
 
 		List<Map> resultList = new ArrayList<>();
 		if (node instanceof ArrayNode) {		
@@ -72,7 +69,7 @@ public class ParseNavitiaResponse {
 	}
 	
 	
-	private void processNode(String currentPath, JsonNode jsonNode, Map<String, String> map) {
+	private static void processNode(String currentPath, JsonNode jsonNode, Map<String, String> map) {
 		if (jsonNode.isObject()) {
 			ObjectNode objectNode = (ObjectNode) jsonNode;
 			Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
