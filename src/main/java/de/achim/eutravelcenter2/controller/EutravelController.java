@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.achim.eutravelcenter2.dao.ConnectionRequestDAO;
@@ -103,11 +104,31 @@ System.out.println(connections.getTravelStartTime());
 	
 	
 	@RequestMapping(path="/coordinates", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Map<String, String> getStationCooridnates(@RequestParam String name) throws Exception, Exception{
+	public @ResponseBody Map<String, String> getStationCooridnates(@RequestParam String name) throws Exception{
 		System.out.println("search name" + name);
-		JsonNode root = service.findCoordinatesForStation(name);
-		Map<String, String>map = ParseNavitiaResponse.parseRegionsResponse(root);
+		Map<String, String> map = findCoordinatesForStation(name);
 		return map;
+	}
+
+	
+	@RequestMapping(path="/region", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, String> getRegionForStation(@RequestParam String name) throws Exception {		
+		Map<String, String> parseRegionsResponse = findRegionForStation(name);
+		return parseRegionsResponse;
+	}
+	
+	private Map<String, String> findCoordinatesForStation(String name) throws Exception, JsonProcessingException {
+		JsonNode root = service.findCoordinatesForStation(name);
+		Map<String, String>map = ParseNavitiaResponse.parseCoordResponse(root);
+		return map;
+	}
+	
+	private Map<String, String> findRegionForStation(String name) throws Exception {
+		Map<String, String> map = findCoordinatesForStation(name);
+		JsonNode regionroot = service.findRegions(map.get("latitude"), map.get("longitude"));
+		Map<String, String> parseRegionsResponse = ParseNavitiaResponse.parseCoordRegionsResponse(regionroot);
+		
+		return parseRegionsResponse;
 	}
 
 }

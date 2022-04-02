@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.node.ValueNode;
 public class ParseNavitiaResponse {
 	
 	
-	public static Map<String, String> parseCoordResponse(JsonNode root) {
+	public static Map<String, String> parseCoordRegionsResponse(JsonNode root) {
 		Map<String, String> resultMap = new HashMap<>();
 		String regionid = "";
 		JsonNode regions =root.findPath("regions");
@@ -38,7 +38,7 @@ public class ParseNavitiaResponse {
 		return resultList;
 	}
 	
-	public static Map<String, String> parseRegionsResponse(JsonNode root) {
+	public static Map<String, String> parseCoordResponse(JsonNode root) {
 		Map<String, String> resultMap = new HashMap<>();
 		String lat =root.findPath("coord").findPath("lat").textValue();
 		String lon =root.findPath("coord").findPath("lon").textValue();
