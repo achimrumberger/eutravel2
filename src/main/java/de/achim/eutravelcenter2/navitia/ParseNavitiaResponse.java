@@ -32,9 +32,9 @@ public class ParseNavitiaResponse {
 	
 	}
 	
-	public static List<Map> parseConnectionsResponse(JsonNode root) {
+	public static List<Map<String, String>> parseConnectionsResponse(JsonNode root) {
 		JsonNode journeyNode = root.findPath("journeys");
-		List<Map> resultList = findArrivalDateTime(journeyNode);
+		List<Map<String, String>> resultList = findArrivalDateTime(journeyNode);
 		return resultList;
 	}
 	
@@ -47,9 +47,9 @@ public class ParseNavitiaResponse {
 		return resultMap;
 	}
 	
-	private static List<Map> findArrivalDateTime(JsonNode node) {
+	private static List<Map<String, String>> findArrivalDateTime(JsonNode node) {
 
-		List<Map> resultList = new ArrayList<>();
+		List<Map<String, String>> resultList = new ArrayList<>();
 		if (node instanceof ArrayNode) {		
 			ArrayNode arrayNode = (ArrayNode) node;
 			Iterator<JsonNode> nodeIterator = arrayNode.iterator();	

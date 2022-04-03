@@ -37,12 +37,12 @@ public class NavitiaService {
 
 
 
-	public JsonNode findConnections(Map fromCoordinates, Map toCoordinates, String dateTime,String regionid) throws Exception, JsonProcessingException {
+	public JsonNode findConnections(String fromCoordinates, String toCoordinates, String dateTime,String regionid) throws Exception, JsonProcessingException {
 		//https://api.navitia.io/v1/coverage/fr-se/journeys?from=2.37083185;48.840163306&to=2.879779;42.696292&datetime=20220331T150000&count=4&
 		String nativaURL = "/https://api.navitia.io/v1/coverage/" 
 				+ regionid 
-				+ "/journeys?from=" + fromCoordinates.get("longitude") + ";" + fromCoordinates.get("latitude") 
-				+ "&to="+ toCoordinates.get("longitude") + ";" + toCoordinates.get("latitude")
+				+ "/journeys?from=" + fromCoordinates 
+				+ "&to="+ toCoordinates
 				+ "&datetime="+dateTime
 				+ "&count=4&";
 
