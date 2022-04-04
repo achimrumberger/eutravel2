@@ -95,7 +95,11 @@ public class BahnRequestService {
 		BahnRequestTemplate brt = new BahnRequestTemplate(brDAO);
 		//brt.setData(brDAO);
 		String requestString = brt.makeRequestString();
+		System.out.println("**********************************");
+
 		System.out.println(requestString);
+		System.out.println("**********************************");
+
 		Response response = 
 				DiagnosticConnection.connect(requestString)
 				.userAgent(MOZILLA_5_0)
@@ -103,7 +107,6 @@ public class BahnRequestService {
 				.method(Method.GET)
 				.followRedirects(true)
 				.execute();
-
 
 		//parse response
 

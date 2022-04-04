@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 
+import de.achim.eutravelcenter2.utils.HMKeys;
+
 public class ParseNavitiaResponse {
 	
 	
@@ -25,8 +27,8 @@ public class ParseNavitiaResponse {
 			
 		}
 		String coord =root.at("/address/id").textValue();
-		resultMap.put("regionid", regionid);
-		resultMap.put("coordinates", coord);
+		resultMap.put(HMKeys.REGIONID.getValue(), regionid);
+		resultMap.put(HMKeys.COORDINATES.getValue(), coord);
 		
 		return resultMap;
 	
@@ -42,8 +44,8 @@ public class ParseNavitiaResponse {
 		Map<String, String> resultMap = new HashMap<>();
 		String lat =root.findPath("coord").findPath("lat").textValue();
 		String lon =root.findPath("coord").findPath("lon").textValue();
-		resultMap.put("longitude", lon);
-		resultMap.put("latitude", lat);
+		resultMap.put(HMKeys.LONGITUDE.getValue(), lon);
+		resultMap.put(HMKeys.LATIDUDE.getValue(), lat);
 		return resultMap;
 	}
 	

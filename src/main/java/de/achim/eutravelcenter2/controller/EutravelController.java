@@ -1,6 +1,5 @@
 package de.achim.eutravelcenter2.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +21,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.achim.eutravelcenter2.dao.ConnectionRequestDAO;
+import de.achim.eutravelcenter2.dao.ConnectionResponseDAO;
 import de.achim.eutravelcenter2.dao.StationDAO;
 import de.achim.eutravelcenter2.dbahn.BahnRequestService;
 import de.achim.eutravelcenter2.navitia.NavitiaService;
 import de.achim.eutravelcenter2.repository.StationDAORepository;
 import de.achim.eutravelcenter2.utils.BahnUtils;
+import de.achim.eutravelcenter2.utils.HMKeys;
 import de.achim.eutravelcenter2.navitia.ParseNavitiaResponse;
 
 @RestController
@@ -40,7 +41,7 @@ public class EutravelController {
 	private BahnRequestService brs;
 
 	@Autowired
-	private NavitiaService service;
+	private NavitiaService navitiaService;
 
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<StationDAO> getAllStations(){
@@ -69,8 +70,9 @@ public class EutravelController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/connections")
-	public List<String> requestConnection(@RequestBody ConnectionRequestDAO connections){
+	public @ResponseBody List<ConnectionResponseDAO> requestConnection(@RequestBody ConnectionRequestDAO connections){
 		List<String> connenctionLinks = new ArrayList<>();
+		List<ConnectionResponseDAO> resultList = new ArrayList<>();
 		System.out.println(connections.getStartStation());
 		System.out.println(connections.getDestinationStation());
 		System.out.println(connections.getTravelStartDate());
@@ -103,27 +105,41 @@ public class EutravelController {
 			String numberOfTravellers = connections.getNumberOfTravellers();
 			//connect to db service
 			if(startStationDAO.getCountry().equalsIgnoreCase("de")) {
-			connenctionLinks = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
-					destinationStationName, destinationX, destinationY, destinationStationID, 
-					requestTimeAsUnixTS, startTravelTime, startTravelDate, numberOfTravellers, tariffClass);
-			}
-			
+				connenctionLinks = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
+						destinationStationName, destinationX, destinationY, destinationStationID, 
+						requestTimeAsUnixTS, startTravelTime, startTravelDate, numberOfTravellers, tariffClass);
+
+				for(String link: connenctionLinks) {
+					ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
+							startTravelDate, startTravelTime, "00:00",  numberOfTravellers, tariffClass, link);
+					resultList.add(responseDAO);
+				}
+				return resultList;
+			}	
+
 			//navitia calling
 			Map<String, String> fromStationData = findRegionForStation(startStationName);
-			String fromCoordinates = fromStationData.get("coordinates");
+			String fromCoordinates = fromStationData.get(HMKeys.COORDINATES.getValue());
 			Map<String, String> toStationData =  findRegionForStation(destinationStationName);
-			String toCoordinates = toStationData.get("coordinates");
-			String regionid = toStationData.get("regionid");
-			String navitiaTravelDate =makeNavitiaDateTimeString(startTravelDate, startTravelTime);
-			
+			String toCoordinates = toStationData.get(HMKeys.COORDINATES.getValue());
+			String regionid = toStationData.get(HMKeys.REGIONID.getValue());
+			String navitiaTravelDate =makeNavitiaDateTimeString(connections.getTravelStartDate(), connections.getTravelStartTime());
+
 			List<Map<String, String>> navitiaConnections = getNavitiaConnections(fromCoordinates, toCoordinates, navitiaTravelDate, regionid);
-			
-			} catch (Exception e) {
+			for(Map<String, String> navitiaMap : navitiaConnections) {
+				
+				ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
+						startTravelDate,startTravelTime, navitiaMap.get(HMKeys.ARRIVAL_DATE_TIME.getValue()),
+						numberOfTravellers, tariffClass, "");
+				resultList.add(responseDAO);
+			}
+			return resultList;
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return connenctionLinks;
+		return resultList;
 	}
 
 
@@ -141,22 +157,22 @@ public class EutravelController {
 		Map<String, String> parseRegionsResponse = findRegionForStation(name);
 		return parseRegionsResponse;
 	}
-	
+
 	public List<Map<String, String>> getNavitiaConnections(String fromCoordinates, String toCoordinates, String dateTime,String regionid) throws Exception {	
-		JsonNode journeysroot = service.findConnections(fromCoordinates, toCoordinates, dateTime, regionid);
+		JsonNode journeysroot = navitiaService.findConnections(fromCoordinates, toCoordinates, dateTime, regionid);
 		List<Map<String, String>> parseConnectionsResponse = ParseNavitiaResponse.parseConnectionsResponse(journeysroot);
 		return parseConnectionsResponse;
 	}
 
 	private Map<String, String> findCoordinatesForStation(String name) throws Exception, JsonProcessingException {
-		JsonNode root = service.findCoordinatesForStation(name);
+		JsonNode root = navitiaService.findCoordinatesForStation(name);
 		Map<String, String>map = ParseNavitiaResponse.parseCoordResponse(root);
 		return map;
 	}
 
 	private Map<String, String> findRegionForStation(String name) throws Exception {
 		Map<String, String> map = findCoordinatesForStation(name);
-		JsonNode regionroot = service.findRegions(map.get("latitude"), map.get("longitude"));
+		JsonNode regionroot = navitiaService.findRegions(map.get("latitude"), map.get("longitude"));
 		Map<String, String> parseRegionsResponse = ParseNavitiaResponse.parseCoordRegionsResponse(regionroot);
 
 		return parseRegionsResponse;

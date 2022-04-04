@@ -1,7 +1,5 @@
 package de.achim.eutravelcenter2.navitia;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,13 +37,13 @@ public class NavitiaService {
 
 	public JsonNode findConnections(String fromCoordinates, String toCoordinates, String dateTime,String regionid) throws Exception, JsonProcessingException {
 		//https://api.navitia.io/v1/coverage/fr-se/journeys?from=2.37083185;48.840163306&to=2.879779;42.696292&datetime=20220331T150000&count=4&
-		String nativaURL = "/https://api.navitia.io/v1/coverage/" 
+		String nativaURL = "https://api.navitia.io/v1/coverage/" 
 				+ regionid 
 				+ "/journeys?from=" + fromCoordinates 
 				+ "&to="+ toCoordinates
-				+ "&datetime="+dateTime
+				+ "&datetime="+ dateTime
 				+ "&count=4&";
-
+System.out.println(nativaURL);
 		JsonNode root = getResponseFromNativia(nativaURL);
 		return root;
 
