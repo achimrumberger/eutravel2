@@ -6,7 +6,9 @@ import java.util.Map;
 
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,11 @@ public class BahnRequestService {
 	private static final String MOZILLA_5_0 = "Mozilla/5.0";
 	private static final String HTTPS_REISEAUSKUNFT_BAHN_DE = "https://reiseauskunft.bahn.de/";
 	private static final String IDENT = "ident";
+	
+	@Autowired
+	ParseDBResponse pdbr;
 
-	public List<String> getConnectionsFromDeutschBahn(
+	public List<Map<String, String>> getConnectionsFromDeutschBahn(
 			String startStation, String startX, String startY, String startStationID, 
 			String destinationStation, String destinationX, String destinationY, String destinationStationID,
 			long requestTimeAsUnixTS,
@@ -110,11 +115,16 @@ public class BahnRequestService {
 
 		//parse response
 
-		Elements tbodies = BahnUtils.parseReiseauskuftResponse(response.parse());
-		//List<String> dataList = this.getDataList(tbodies);
-		resultList = BahnUtils.findDetailsLinks(tbodies);
+//		Elements tbodies = BahnUtils.parseReiseauskuftResponse(response.parse());
+//		//List<String> dataList = this.getDataList(tbodies);
+//		resultList = BahnUtils.findDetailsLinks(tbodies);
+//		
+		Element overviewContainer = pdbr.findresultsOverviewContainer(response.parse());
+		Elements overview_updateC0 = pdbr.findOverviewUpdate(overviewContainer);
 
-		return resultList;
+		List<Map<String, String>> result = pdbr.findConnectionDataElements(overview_updateC0);
+
+		return result;
 	}
 
 

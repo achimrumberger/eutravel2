@@ -70,8 +70,8 @@ public class EutravelController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/connections")
-	public @ResponseBody List<ConnectionResponseDAO> requestConnection(@RequestBody ConnectionRequestDAO connections){
-		List<String> connenctionLinks = new ArrayList<>();
+	public @ResponseBody List<Map<String, String>> requestConnection(@RequestBody ConnectionRequestDAO connections){
+		List<Map<String, String>> resultMap = new ArrayList<>();
 		List<ConnectionResponseDAO> resultList = new ArrayList<>();
 		System.out.println(connections.getStartStation());
 		System.out.println(connections.getDestinationStation());
@@ -105,16 +105,16 @@ public class EutravelController {
 			String numberOfTravellers = connections.getNumberOfTravellers();
 			//connect to db service
 			if(startStationDAO.getCountry().equalsIgnoreCase("de")) {
-				connenctionLinks = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
+				resultMap = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
 						destinationStationName, destinationX, destinationY, destinationStationID, 
 						requestTimeAsUnixTS, startTravelTime, startTravelDate, numberOfTravellers, tariffClass);
 
-				for(String link: connenctionLinks) {
-					ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
-							startTravelDate, startTravelTime, "00:00",  numberOfTravellers, tariffClass, link);
-					resultList.add(responseDAO);
-				}
-				return resultList;
+//				for(String link: connenctionLinks) {
+//					ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
+//							startTravelDate, startTravelTime, "00:00",  numberOfTravellers, tariffClass, link);
+//					resultList.add(responseDAO);
+//				}
+				return resultMap;
 			}	
 
 			//navitia calling
@@ -133,13 +133,13 @@ public class EutravelController {
 						numberOfTravellers, tariffClass, "");
 				resultList.add(responseDAO);
 			}
-			return resultList;
+			//return resultList;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return resultList;
+		return resultMap;
 	}
 
 
