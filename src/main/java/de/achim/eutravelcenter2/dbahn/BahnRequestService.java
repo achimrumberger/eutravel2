@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import de.achim.eutravelcenter2.dao.ConnectionResponseDAO;
 import de.achim.eutravelcenter2.utils.BahnUtils;
 import de.achim.eutravelcenter2.utils.DiagnosticConnection;
 
@@ -26,7 +27,7 @@ public class BahnRequestService {
 	@Autowired
 	ParseDBResponse pdbr;
 
-	public List<Map<String, String>> getConnectionsFromDeutschBahn(
+	public List<ConnectionResponseDAO> getConnectionsFromDeutschBahn(
 			String startStation, String startX, String startY, String startStationID, 
 			String destinationStation, String destinationX, String destinationY, String destinationStationID,
 			long requestTimeAsUnixTS,
@@ -122,7 +123,7 @@ public class BahnRequestService {
 		Element overviewContainer = pdbr.findresultsOverviewContainer(response.parse());
 		Elements overview_updateC0 = pdbr.findOverviewUpdate(overviewContainer);
 
-		List<Map<String, String>> result = pdbr.findConnectionDataElements(overview_updateC0);
+		List<ConnectionResponseDAO> result = pdbr.findConnectionDataElements(overview_updateC0);
 
 		return result;
 	}

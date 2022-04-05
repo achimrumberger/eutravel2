@@ -70,7 +70,7 @@ public class EutravelController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/connections")
-	public @ResponseBody List<Map<String, String>> requestConnection(@RequestBody ConnectionRequestDAO connections){
+	public @ResponseBody List<ConnectionResponseDAO> requestConnection(@RequestBody ConnectionRequestDAO connections){
 		List<Map<String, String>> resultMap = new ArrayList<>();
 		List<ConnectionResponseDAO> resultList = new ArrayList<>();
 		System.out.println(connections.getStartStation());
@@ -80,7 +80,6 @@ public class EutravelController {
 		try {
 			StationDAO startStationDAO = sdr.findByNameQuery(connections.getStartStation()).iterator().next();
 			StationDAO destinationStationDAO = sdr.findByNameQuery(connections.getDestinationStation()).iterator().next();
-			//TODO: navitia datetimeformat is yyyymmddThhmmss
 
 			String startTravelDate = BahnUtils.makeBahnDatum(connections.getTravelStartDate());
 			String startTravelTime = connections.getTravelStartTime();
@@ -105,7 +104,7 @@ public class EutravelController {
 			String numberOfTravellers = connections.getNumberOfTravellers();
 			//connect to db service
 			if(startStationDAO.getCountry().equalsIgnoreCase("de")) {
-				resultMap = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
+				resultList = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
 						destinationStationName, destinationX, destinationY, destinationStationID, 
 						requestTimeAsUnixTS, startTravelTime, startTravelDate, numberOfTravellers, tariffClass);
 
@@ -114,13 +113,13 @@ public class EutravelController {
 //							startTravelDate, startTravelTime, "00:00",  numberOfTravellers, tariffClass, link);
 //					resultList.add(responseDAO);
 //				}
-				return resultMap;
+				return resultList;
 			}	
 
 			//navitia calling
-			Map<String, String> fromStationData = findRegionForStation(startStationName);
+			Map<String, String> fromStationData = findRegionForStation(connections.getStartStation());
 			String fromCoordinates = fromStationData.get(HMKeys.COORDINATES.getValue());
-			Map<String, String> toStationData =  findRegionForStation(destinationStationName);
+			Map<String, String> toStationData =  findRegionForStation(connections.getDestinationStation());
 			String toCoordinates = toStationData.get(HMKeys.COORDINATES.getValue());
 			String regionid = toStationData.get(HMKeys.REGIONID.getValue());
 			String navitiaTravelDate =makeNavitiaDateTimeString(connections.getTravelStartDate(), connections.getTravelStartTime());
@@ -129,17 +128,17 @@ public class EutravelController {
 			for(Map<String, String> navitiaMap : navitiaConnections) {
 				
 				ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
-						startTravelDate,startTravelTime, navitiaMap.get(HMKeys.ARRIVAL_DATE_TIME.getValue()),
-						numberOfTravellers, tariffClass, "");
+						startTravelDate,startTravelTime, navitiaMap.get(HMKeys.ARRIVAL_DATE_TIME.getValue()),"n.a",
+						numberOfTravellers, tariffClass, "n.a",  "n.a");
 				resultList.add(responseDAO);
 			}
-			//return resultList;
+			return resultList;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return resultMap;
+		return resultList;
 	}
 
 

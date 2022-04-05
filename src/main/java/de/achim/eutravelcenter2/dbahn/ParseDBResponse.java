@@ -1,14 +1,14 @@
 package de.achim.eutravelcenter2.dbahn;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+
+import de.achim.eutravelcenter2.dao.ConnectionResponseDAO;
 
 @Component
 public class ParseDBResponse {
@@ -36,38 +36,37 @@ public class ParseDBResponse {
 	//----------------------------find times ----------------------------------------------
 
 
-	public List<Map<String, String>> findConnectionDataElements(Elements ovcList) {
-		List<Map<String, String>> resultMapList = new ArrayList<>();
+	public List<ConnectionResponseDAO> findConnectionDataElements(Elements ovcList) {
+		List<ConnectionResponseDAO> resultList = new ArrayList<>();
 		for(Element ovc: ovcList) {
-			Map<String, String> resultMap = new HashMap<>();
+			ConnectionResponseDAO crDAO = new ConnectionResponseDAO();
 			Elements cdList = ovc.select("div.connectionData");
 			Elements cpList = ovc.select("div.connectionPrice");
-			findFarePepElements(cpList, resultMap);
-			findConnectionTimeElements(cdList, resultMap);
+			findFarePepElements(cpList, crDAO);
+			findConnectionTimeElements(cdList, crDAO);
 
-			resultMapList.add(resultMap);
+			resultList.add(crDAO);
 		}
-		return resultMapList;
+		return resultList;
 
 	}
 
-	private void findConnectionTimeElements(Elements cdList, Map<String, String> map) {
+	private void findConnectionTimeElements(Elements cdList, ConnectionResponseDAO crDAO) {
 		for(Element cd: cdList) {
 			Elements timeList = cd.select("div.connectiontime");
-			findTimeElements(timeList, map);
+			findTimeElements(timeList, crDAO);
 		}
 	}
 
-	private void findTimeElements(Elements timeList, Map<String, String> map) {
+	private void findTimeElements(Elements timeList, ConnectionResponseDAO crDAO) {
 
 		for(Element el :timeList) {
 			Elements elTimeDep = el.select("div.time.timeDep");
 			Elements elTimeArr = el.select("div.time.timeArr");
 			Elements elTimeDur= el.select("div.duration");
-			map.put("elTimeDep", fromFirstDigit(elTimeDep.text()));
-			map.put("elTimeArr", fromFirstDigit(elTimeArr.text()));
-			map.put("elTimeDur", fromFirstDigit(elTimeDur.text()));
-
+			crDAO.setArrivalTime(fromFirstDigit(elTimeArr.text()));
+			crDAO.setDepartimeTime(fromFirstDigit(elTimeDep.text()));
+			crDAO.setTravelDuration(fromFirstDigit(elTimeDur.text()));
 		}
 
 	}
@@ -75,31 +74,32 @@ public class ParseDBResponse {
 
 
 	//----------------------------find price and link----------------------------------------------
-	private void findConnectionPriceElements(Elements ovcList, Map<String, String> map) {
+	private void findConnectionPriceElements(Elements ovcList, ConnectionResponseDAO crDAO) {
 		for(Element ovc: ovcList) {
 			Elements cdList = ovc.select("div.connectionPrice");
-			findFarePepElements(cdList, map);
+			findFarePepElements(cdList, crDAO);
 		}
 
 	}
 
 
-	private void findFarePepElements(Elements cdList, Map<String, String> map) {
+	private void findFarePepElements(Elements cdList, ConnectionResponseDAO crDAO) {
 		for(Element cd: cdList) {
 
 			Elements fpList = cd.select("div.farePep.lastrow.button-inside.tablebutton.borderright");
-			findPriceElements(fpList, map);
+			findPriceElements(fpList, crDAO);
 		}
 	}
 
-	private void findPriceElements(Elements fpList, Map<String, String> map) {
+	private void findPriceElements(Elements fpList,ConnectionResponseDAO crDAO) {
 
 		for(Element el : fpList) {
 			Element fpOutput = el.select("span.fareOutput").first();
 			Element result = el.select("a").first();
 			String data = result.attr("href");		
-			map.put("link", data);
-			map.put("fare", fpOutput.text());
+			crDAO.setFare(fpOutput.text());
+			crDAO.setLink(data);
+			
 		}
 	}
 
