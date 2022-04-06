@@ -16,6 +16,7 @@ export class StationnamesearchService {
 
     //const url = 'http://eutravel-service-app/eutravel/stationsearch';
     const url = 'http://localhost:8084/eutravel/stationsearch';
+    //const url = environment.apiURL+'/stationsearch';
     const headers = new HttpHeaders()
     .append('Accept', 'application/json')
     .append('Access-Control-Allow-Origin', '*');

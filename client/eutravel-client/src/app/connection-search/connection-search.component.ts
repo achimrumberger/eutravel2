@@ -11,6 +11,7 @@ import { ConnectionsearchService } from '../connectionsearch.service';
 
  import { Station } from '../station';
 import { StationnamesearchService } from '../stationnamesearch.service';
+import { ConnectionDAO } from '../connectiondao';
 
 @Component({
   selector: 'app-connection-search',
@@ -31,7 +32,7 @@ export class ConnectionSearchComponent implements OnInit {
   numberOfTRavellers: string = '1';
   tariffClass: string = '2';
 
-  foundConnections: Array<Station>  = [];
+  foundConnections: Array<ConnectionDAO>  = [];
 
   constructor(private stationnameservice: StationnamesearchService,
     private connectionsearchservice: ConnectionsearchService) {
@@ -129,12 +130,7 @@ export class ConnectionSearchComponent implements OnInit {
   this.connectionsearchservice.findsConnections(conny)
   .subscribe({
     next: (connections) => {
-      connections.forEach((s) => {
-        let stat:Station = {
-          name:s
-        };
-        this.foundConnections.push(stat);
-      })
+        this.foundConnections=connections;
     },
     error: (err) => {
         console.error('Error', err);
