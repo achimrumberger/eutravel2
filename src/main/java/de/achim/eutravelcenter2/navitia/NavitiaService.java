@@ -1,5 +1,8 @@
 package de.achim.eutravelcenter2.navitia;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +31,7 @@ public class NavitiaService {
 	public JsonNode findCoordinatesForStation(String stationName) throws Exception, JsonProcessingException {
 		//https://api.navitia.io/v1/places?q=Gare de Lyon&
 		//https://api.navitia.io/v1/coverage/fr-idf/places?q=Gare de Lyon&
-		String nativaURL = "https://api.navitia.io/v1/places?q="+ stationName;
+		String nativaURL = "https://api.navitia.io/v1/places?q="+ URLEncoder.encode(stationName, StandardCharsets.UTF_8);
 		JsonNode root = getResponseFromNativia(nativaURL);
 		return root;
 	}
@@ -43,7 +46,7 @@ public class NavitiaService {
 				+ "&to="+ toCoordinates
 				+ "&datetime="+ dateTime
 				+ "&count=4&";
-System.out.println(nativaURL);
+			System.out.println(nativaURL);
 		JsonNode root = getResponseFromNativia(nativaURL);
 		return root;
 
@@ -59,8 +62,11 @@ System.out.println(nativaURL);
 
 
 	private JsonNode getResponseFromNativia(String nativaURL) throws JsonProcessingException, JsonMappingException {
+		System.out.println("**************************");
+		System.out.println(nativaURL);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", authToken);
+		System.out.println(authToken);
 
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
