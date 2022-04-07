@@ -1,0 +1,22 @@
+<div class="card" [ngClass]="{ 'active-card' : selected }">
+  <div class="card-header">
+    <h2 class="title">{{connection?.startStation}}
+      - {{connection?.stopStation}}
+    </h2>
+  </div>
+  <div class="card-body">
+  <p>departure time: {{connection?.departumeTime}}</p>
+  <p>arrival time: {{connection?.arrivalTime}}</p>
+  <p>travel duration: {{connection?.travelDuration}}</p>
+  <p>fare p.p: {{connection?.fare}}</p>
+    <p>
+      <button class="btn btn-default"
+          *ngIf="!selected"
+          (click)="select()">Select</button>
+
+      <button class="btn btn-default"
+          *ngIf="selected"
+          (click)="deselect()">Remove</button>
+  </p>
+  </div>
+</div>

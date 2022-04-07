@@ -11,7 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'
-import { MAT_DATE_LOCALE } from '@angular/material/core'
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { ConnectionCardComponent } from './connection-card/connection-card.component'
 
 @NgModule({
    imports: [
@@ -28,7 +29,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core'
    ],
    declarations: [
       AppComponent,
-      ConnectionSearchComponent
+      ConnectionSearchComponent,
+      ConnectionCardComponent
    ],
    providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }

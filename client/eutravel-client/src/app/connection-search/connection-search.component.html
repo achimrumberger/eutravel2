@@ -60,14 +60,14 @@
     </button>
 </div>
 
-<table class="table table-striped" name="result">
-  <tbody>
-  <tr *ngFor="let station of foundConnections">
-  <td><a href={{station.name}} target="_blank" rel="noopener noreferrer">blabla</a></td>
-  </tr>
-</tbody>
-</table>
+<div class="row">
+<div *ngFor="let connectiondao of foundConnections">
+  <app-connection-card [connection]="connectiondao">
 
+  </app-connection-card>
+</div>
+
+</div>
 
 
 </div>
