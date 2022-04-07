@@ -96,9 +96,9 @@ public class ParseDBResponse {
 		for(Element el : fpList) {
 			Element fpOutput = el.select("span.fareOutput").first();
 			Element result = el.select("a").first();
-			String data = result.attr("href");		
+//			String data = result.attr("href");		
 			crDAO.setFare(fpOutput.text());
-			crDAO.setLink(data);
+			crDAO.setLink("");
 			
 		}
 	}

@@ -102,7 +102,7 @@ public class EutravelController {
 			//tariffClass 2 = tariffTravellerType_1="E"??
 			String tariffClass = connections.getTariffClass();		
 			String numberOfTravellers = connections.getNumberOfTravellers();
-			//connect to db service
+			//connect to db service4
 			if(startStationDAO.getCountry().equalsIgnoreCase("de")) {
 				resultList = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
 						destinationStationName, destinationX, destinationY, destinationStationID, 
@@ -117,11 +117,22 @@ public class EutravelController {
 			}	
 
 			//navitia calling
-			Map<String, String> fromStationData = findRegionForStation(connections.getStartStation());
-			String fromCoordinates = fromStationData.get(HMKeys.COORDINATES.getValue());
-			Map<String, String> toStationData =  findRegionForStation(connections.getDestinationStation());
-			String toCoordinates = toStationData.get(HMKeys.COORDINATES.getValue());
-			String regionid = toStationData.get(HMKeys.REGIONID.getValue());
+			String fromCoordinates = "";
+			String toCoordinates = "";
+			String regionid = "";
+			if(startX != null && destinationX != null ) {
+				fromCoordinates = startStationDAO.getLongitude()+ ";" + startStationDAO.getLatitude();
+				toCoordinates = destinationStationDAO.getLongitude()+ ";" + destinationStationDAO.getLatitude();
+				Map<String, String> destData = findRegionForStationFromCoordinates(destinationStationDAO.getLongitude(), destinationStationDAO.getLatitude());
+				regionid = destData.get(HMKeys.REGIONID.getValue());
+			}
+			else {
+				Map<String, String> fromStationData = findRegionForStation(connections.getStartStation());
+				fromCoordinates = fromStationData.get(HMKeys.COORDINATES.getValue());
+				Map<String, String> toStationData =  findRegionForStation(connections.getDestinationStation());
+				toCoordinates = toStationData.get(HMKeys.COORDINATES.getValue());
+				regionid = toStationData.get(HMKeys.REGIONID.getValue());
+			}
 			String navitiaTravelDate =makeNavitiaDateTimeString(connections.getTravelStartDate(), connections.getTravelStartTime());
 
 			List<Map<String, String>> navitiaConnections = getNavitiaConnections(fromCoordinates, toCoordinates, navitiaTravelDate, regionid);
@@ -172,6 +183,14 @@ public class EutravelController {
 	private Map<String, String> findRegionForStation(String name) throws Exception {
 		Map<String, String> map = findCoordinatesForStation(name);
 		JsonNode regionroot = navitiaService.findRegions(map.get("latitude"), map.get("longitude"));
+		Map<String, String> parseRegionsResponse = ParseNavitiaResponse.parseCoordRegionsResponse(regionroot);
+
+		return parseRegionsResponse;
+	}
+	
+	private Map<String, String> findRegionForStationFromCoordinates(String longitude, String latidude) throws Exception {
+		
+		JsonNode regionroot = navitiaService.findRegions(latidude, longitude);
 		Map<String, String> parseRegionsResponse = ParseNavitiaResponse.parseCoordRegionsResponse(regionroot);
 
 		return parseRegionsResponse;
