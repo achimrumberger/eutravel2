@@ -62,11 +62,9 @@ public class NavitiaService {
 
 
 	private JsonNode getResponseFromNativia(String nativaURL) throws JsonProcessingException, JsonMappingException {
-		System.out.println("**************************");
-		System.out.println(nativaURL);
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", authToken);
-		System.out.println(authToken);
 
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 

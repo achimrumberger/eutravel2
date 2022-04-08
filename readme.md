@@ -50,3 +50,8 @@ curl -X POST http://localhost:8084/eutravel/connections \
 	"numberOfTravellers":"1"
 }'
 ```
+
+
+**Navitia Token**
+get the Navitia-Token from [Navitia](https://navitia.io/en/subscription/) for free and copy it to the application.properties file 
+parameter is 'nativia.authtoken'

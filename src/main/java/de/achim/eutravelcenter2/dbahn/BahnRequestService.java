@@ -124,7 +124,7 @@ public class BahnRequestService {
 		Elements overview_updateC0 = pdbr.findOverviewUpdate(overviewContainer);
 
 		List<ConnectionResponseDAO> result = pdbr.findConnectionDataElements(overview_updateC0);
-
+		fillDAOLIstWithParams(result, startStation, destinationStation, startDate, numberOfTravellers, tariffClassOfTraveller);
 		return result;
 	}
 
@@ -142,6 +142,16 @@ public class BahnRequestService {
 		return identCookie;
 	}
 
-	
+	private void fillDAOLIstWithParams(List<ConnectionResponseDAO> daoList, String startStation, 
+			String destinationStation, String startDate, String numberOfTravellers, String tariffClassOfTraveller) {
+		for(ConnectionResponseDAO crDAO : daoList) {
+			crDAO.setStartStation(startStation);
+			crDAO.setStopStation(destinationStation);
+			crDAO.setDepartureDate(startDate);
+			crDAO.setNumberOfTravellers(numberOfTravellers);
+			crDAO.setTarifClass(tariffClassOfTraveller);
+		}
+		
+	}
 
 }

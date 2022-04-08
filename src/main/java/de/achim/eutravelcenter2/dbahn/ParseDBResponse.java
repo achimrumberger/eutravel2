@@ -2,6 +2,7 @@ package de.achim.eutravelcenter2.dbahn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,6 +44,7 @@ public class ParseDBResponse {
 			Elements cdList = ovc.select("div.connectionData");
 			Elements cpList = ovc.select("div.connectionPrice");
 			findFarePepElements(cpList, crDAO);
+			findBookingLinkElements(cpList, crDAO);
 			findConnectionTimeElements(cdList, crDAO);
 
 			resultList.add(crDAO);
@@ -95,11 +97,24 @@ public class ParseDBResponse {
 
 		for(Element el : fpList) {
 			Element fpOutput = el.select("span.fareOutput").first();
-			Element result = el.select("a").first();
-//			String data = result.attr("href");		
 			crDAO.setFare(fpOutput.text());
-			crDAO.setLink("");
-			
+		}
+	}
+	
+public void findBookingLinkElements(Elements cdList, ConnectionResponseDAO crDAO) {
+		
+		for(Element el : cdList) {
+			Elements fpList = el.select("div.fareStd.button-inside.tablebutton.center");
+			findBookingLinkButton(fpList, crDAO);
+		}
+	}
+	
+	public void findBookingLinkButton(Elements fpList, ConnectionResponseDAO crDAO) {
+		for(Element el : fpList) {
+			Element fpbutton = el.select("span.button-border").first();
+			Element result = fpbutton.select("a").first();
+			String data = result.attr("href");		
+			crDAO.setLink(data);
 		}
 	}
 
