@@ -1,14 +1,19 @@
 <div class="card" [ngClass]="{ 'active-card' : selected }">
   <div class="card-header">
-    <h2 class="title">{{connection?.startStation}}
+    <h3 class="title">{{connection?.startStation}}
       - {{connection?.stopStation}}
-    </h2>
+    </h3>
   </div>
   <div class="card-body">
   <p>departure time: {{connection?.departumeTime}}</p>
   <p>arrival time: {{connection?.arrivalTime}}</p>
   <p>travel duration: {{connection?.travelDuration}}</p>
   <p>fare p.p: {{connection?.fare}}</p>
+  <div *ngIf="connection?.link!='n.a'">
+  <p>
+    <a href={{connection?.link}} target="_blank">Book now</a>
+  </p>
+</div>
     <p>
       <button class="btn btn-default"
           *ngIf="!selected"
