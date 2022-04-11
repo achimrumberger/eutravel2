@@ -25,6 +25,7 @@ export class ConnectionSearchComponent implements OnInit {
   filteredDestinationStations: Array<Station> = [];
   isLoading = false;
   isWaiting = false;
+  emptyMessage = true;
   errorDepMsg: String = '';
   errorDestMsg: String = '';
   travelDate: string = '';
@@ -110,7 +111,7 @@ export class ConnectionSearchComponent implements OnInit {
     console.log(this.tariffClass);
     console.log(this.searchDestinationStationsCtrl.value);
     console.log(this.searchDepartureStationsCtrl.value);
-    console.log("searchConnections: "+this.isWaiting);
+    console.log("searchConnections: " + this.isWaiting);
 
     const conny = new Connection(
       this.searchDepartureStationsCtrl.value,
@@ -125,12 +126,14 @@ export class ConnectionSearchComponent implements OnInit {
         tap(
           () => {
             this.foundConnections = [];
-            console.log("tap: "+this.isWaiting);
+            console.log("tap: " + this.isWaiting);
           }),
-          finalize(() => {
-            this.isWaiting = false;
-            console.log("finalize: "+this.isWaiting);
-          })
+        finalize(() => {
+          this.isWaiting = false;
+          console.log("finalize: " + this.isWaiting);
+          this.emptyClause(this.foundConnections)
+
+        })
       )//end of pipe
       .subscribe(
         {
@@ -144,4 +147,13 @@ export class ConnectionSearchComponent implements OnInit {
         });//end of subscribe
   }//end of searchConnections
 
+
+  emptyClause(array: any) {
+    if (array.length === 0) {
+      // array empty or does not exist
+      this.emptyMessage = false;
+    } else {
+      this.emptyMessage = true;
+    }
+  }
 }
