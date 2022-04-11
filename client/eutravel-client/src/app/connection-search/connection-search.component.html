@@ -1,9 +1,9 @@
 <h3>Travel Search</h3>
 <div class="form-group">
-<!-- <form [formGroup]="form" (ngSubmit)="searchConnections()"> -->
+  <!-- <form [formGroup]="form" (ngSubmit)="searchConnections()"> -->
   <mat-form-field>
-    <input matInput placeholder="Search Departure Station" aria-label="State"
-    [matAutocomplete]="destauto" [formControl]="searchDepartureStationsCtrl" class="form-control" name="originput">
+    <input matInput placeholder="Search Departure Station" aria-label="State" [matAutocomplete]="destauto"
+      [formControl]="searchDepartureStationsCtrl" class="form-control" name="originput">
     <mat-autocomplete #destauto="matAutocomplete">
       <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
       <ng-container *ngIf="!isLoading">
@@ -15,7 +15,7 @@
   </mat-form-field>
 
 
-<br>
+  <br>
   <mat-form-field appearance="fill">
     <mat-label>Choose a date</mat-label>
     <input matInput [matDatepicker]="picker" [(ngModel)]="travelDate" name="inputdate">
@@ -32,8 +32,8 @@
 
 
   <mat-form-field>
-    <input matInput placeholder="Search Destination Station" aria-label="State"
-    [matAutocomplete]="depauto" [formControl]="searchDestinationStationsCtrl" class="form-control" name="destinput">
+    <input matInput placeholder="Search Destination Station" aria-label="State" [matAutocomplete]="depauto"
+      [formControl]="searchDestinationStationsCtrl" class="form-control" name="destinput">
     <mat-autocomplete #depauto="matAutocomplete">
       <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
       <ng-container *ngIf="!isLoading">
@@ -54,20 +54,29 @@
     <mat-label>tariff Class</mat-label>
     <input placeholder="2" matInput [(ngModel)]="tariffClass">
   </mat-form-field>
+
+
   <div class="form-group">
-    <button class="btn btn-default" (click)="searchConnections()" [disabled]="!searchDepartureStationsCtrl.value || !searchDestinationStationsCtrl.value" name="btnsearch">
-        Search
+    <button class="btn btn-default" (click)="searchConnections()"
+      [disabled]="!searchDepartureStationsCtrl.value || !searchDestinationStationsCtrl.value" name="btnsearch">
+      Search
     </button>
-</div>
+    <ng-container *ngIf="isWaiting" style="margin-left:10px">
+      <div class="overlay"></div>
+      <mat-spinner [diameter]="35"></mat-spinner>
+    </ng-container>
 
-<div class="row">
-<div *ngFor="let connectiondao of foundConnections">
-  <app-connection-card [connection]="connectiondao">
+  </div>
 
-  </app-connection-card>
-</div>
+  <div class="row">
 
-</div>
+    <div *ngFor="let connectiondao of foundConnections">
+      <app-connection-card [connection]="connectiondao">
+
+      </app-connection-card>
+    </div>
+
+  </div>
 
 
 </div>

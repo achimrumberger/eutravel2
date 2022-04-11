@@ -13,7 +13,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ConnectionCardComponent } from './connection-card/connection-card.component'
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @NgModule({
    imports: [
      FormsModule,
@@ -25,6 +25,7 @@ import { ConnectionCardComponent } from './connection-card/connection-card.compo
       MatInputModule,
       MatDatepickerModule,
       MatNativeDateModule,
+      MatProgressSpinnerModule,
       ReactiveFormsModule
    ],
    declarations: [

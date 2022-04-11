@@ -1,15 +1,14 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
-import {formatDate} from '@angular/common';
+import { FormControl } from '@angular/forms';
+import { debounceTime, finalize, switchMap, tap } from 'rxjs/operators';
+import { formatDate } from '@angular/common';
 
-import { Connection
- } from '../connection';
+import {
+  Connection
+} from '../connection';
 import { ConnectionsearchService } from '../connectionsearch.service';
 
- import { Station } from '../station';
+import { Station } from '../station';
 import { StationnamesearchService } from '../stationnamesearch.service';
 import { ConnectionDAO } from '../connectiondao';
 
@@ -25,6 +24,7 @@ export class ConnectionSearchComponent implements OnInit {
   filteredDepartureStations: Array<Station> = [];
   filteredDestinationStations: Array<Station> = [];
   isLoading = false;
+  isWaiting = false;
   errorDepMsg: String = '';
   errorDestMsg: String = '';
   travelDate: string = '';
@@ -32,14 +32,14 @@ export class ConnectionSearchComponent implements OnInit {
   numberOfTRavellers: string = '1';
   tariffClass: string = '2';
 
-  foundConnections: Array<ConnectionDAO>  = [];
+  foundConnections: Array<ConnectionDAO> = [];
 
   constructor(private stationnameservice: StationnamesearchService,
     private connectionsearchservice: ConnectionsearchService) {
 
-   }
+  }
 
-  ngOnInit():void {
+  ngOnInit(): void {
     this.searchDepartureStationsCtrl.valueChanges
       .pipe(
         debounceTime(500),
@@ -59,18 +59,18 @@ export class ConnectionSearchComponent implements OnInit {
       .subscribe({
         next: (depstationName) => {
           depstationName.forEach((s) => {
-            let stat:Station = {
-              name:s
+            let stat: Station = {
+              name: s
             };
             this.filteredDepartureStations.push(stat);
           })
         },
         error: (err) => {
-            console.error('Error', err);
+          console.error('Error', err);
         }
-      });this.searchDepartureStationsCtrl.value
-//----------------------------------------------------------------
-      this.searchDestinationStationsCtrl.valueChanges
+      }); this.searchDepartureStationsCtrl.value
+    //----------------------------------------------------------------
+    this.searchDestinationStationsCtrl.valueChanges
       .pipe(
         debounceTime(500),
         tap(() => {
@@ -89,54 +89,59 @@ export class ConnectionSearchComponent implements OnInit {
       .subscribe({
         next: (deststationName) => {
           deststationName.forEach((s) => {
-            let stat:Station = {
-              name:s
+            let stat: Station = {
+              name: s
             };
             this.filteredDestinationStations.push(stat);
           })
         },
         error: (err) => {
-            console.error('Error', err);
+          console.error('Error', err);
         }
       });
   } //end of ngInit
 
-  search():void {
+  searchConnections(): void {
+    this.isWaiting = true;
     console.log(this.travelDate);
+    console.log(formatDate(this.travelDate, 'dd/MM/yyyy', 'en-DE'));
     console.log(this.travelTime);
     console.log(this.numberOfTRavellers);
     console.log(this.tariffClass);
     console.log(this.searchDestinationStationsCtrl.value);
     console.log(this.searchDepartureStationsCtrl.value);
-  }
-
-  searchConnections():void {
-    console.log(this.travelDate);
-    console.log(formatDate(this.travelDate,'dd/MM/yyyy', 'en-DE'));
-    console.log(this.travelTime);
-    console.log(this.numberOfTRavellers);
-    console.log(this.tariffClass);
-    console.log(this.searchDestinationStationsCtrl.value);
-    console.log(this.searchDepartureStationsCtrl.value);
+    console.log("searchConnections: "+this.isWaiting);
 
     const conny = new Connection(
-        this.searchDepartureStationsCtrl.value,
-        this.searchDestinationStationsCtrl.value,
-        formatDate(this.travelDate,'dd/MM/yyyy', 'en-DE'),//this.travelDate'',
-        this.travelTime,
-        this.numberOfTRavellers,
-        this.tariffClass
+      this.searchDepartureStationsCtrl.value,
+      this.searchDestinationStationsCtrl.value,
+      formatDate(this.travelDate, 'dd/MM/yyyy', 'en-DE'),//this.travelDate'',
+      this.travelTime,
+      this.numberOfTRavellers,
+      this.tariffClass
     );
-  this.connectionsearchservice.findsConnections(conny)
-  .subscribe({
-    next: (connections) => {
-        this.foundConnections=connections;
-    },
-    error: (err) => {
-        console.error('Error', err);
-    }
-  });
-
-  }
+    this.connectionsearchservice.findsConnections(conny)
+      .pipe(
+        tap(
+          () => {
+            this.foundConnections = [];
+            console.log("tap: "+this.isWaiting);
+          }),
+          finalize(() => {
+            this.isWaiting = false;
+            console.log("finalize: "+this.isWaiting);
+          })
+      )//end of pipe
+      .subscribe(
+        {
+          next: (connections) => {
+            this.foundConnections = connections;
+            console.log("subscribe: " + this.isWaiting);
+          },
+          error: (err) => {
+            console.error('Error', err);
+          }
+        });//end of subscribe
+  }//end of searchConnections
 
 }
