@@ -1,6 +1,7 @@
 package selenium;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Duration;
 import java.util.List;
@@ -63,15 +64,11 @@ public class FrontendTest {
 
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		
-		List<WebElement> listRows = driver.findElements(By.xpath("//*[@name='result']/tbody/tr"));
-		System.out.println(listRows);
-		for(WebElement tr: listRows) {
-			WebElement td = tr.findElement(By.xpath("./child::*"));
-			System.out.println(td.getText());
-			WebElement ahref = td.findElement(By.xpath("./child::*"));
-			System.out.println(ahref.getAttribute("href"));
-		}
-		assertEquals(listRows.size(), 3);
+		WebElement listRows = driver.findElement(By.xpath("//*[@name='result']"));
+		
+		List<WebElement> allDivChildren = listRows.findElements(By.tagName("div"));
+				
+		assertEquals(allDivChildren.size(),1);
 
 		driver.close();
 		

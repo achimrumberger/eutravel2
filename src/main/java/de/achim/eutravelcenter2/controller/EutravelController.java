@@ -108,11 +108,6 @@ public class EutravelController {
 						destinationStationName, destinationX, destinationY, destinationStationID, 
 						requestTimeAsUnixTS, startTravelTime, startTravelDate, numberOfTravellers, tariffClass);
 
-//				for(String link: connenctionLinks) {
-//					ConnectionResponseDAO responseDAO = new ConnectionResponseDAO(startStationName, destinationStationName, 
-//							startTravelDate, startTravelTime, "00:00",  numberOfTravellers, tariffClass, link);
-//					resultList.add(responseDAO);
-//				}
 				return resultList;
 			}	
 
