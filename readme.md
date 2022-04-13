@@ -50,7 +50,16 @@ curl -X POST http://localhost:8084/eutravel/connections \
 	"numberOfTravellers":"1"
 }'
 ```
-
+***Selenium***
+make sure to download geckodriver and add location to your PATH variable,
+if you are using Linux for example like this:
+```
+'export PATH_$PATH:<path to gecko driver dir>' 
+after editing reload bash profile
+~/.bash_profile
+test installation:
+> geckodriver
+```
 
 **Navitia Token**
 get the Navitia-Token from [Navitia](https://navitia.io/en/subscription/) for free and copy it to the application.properties file 

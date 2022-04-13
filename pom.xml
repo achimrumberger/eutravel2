@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>de.achim</groupId>
 	<artifactId>eutravelcenter2</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>eutravelcenter2</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
