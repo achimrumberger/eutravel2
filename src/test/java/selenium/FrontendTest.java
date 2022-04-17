@@ -3,8 +3,15 @@ package selenium;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -53,7 +60,7 @@ public class FrontendTest {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		//how to interact with date picker???
 		//important: correct format for date
-		inputDate.sendKeys("Sun Jun 26 2022 00:00:00 GMT+0");
+		inputDate.sendKeys(createFrontendDate());
 		inputTime.sendKeys("13:00");
 		destinput.sendKeys("Stuttgart Hbf");
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -81,6 +88,21 @@ public class FrontendTest {
 	private static void waitForCondition(ExpectedCondition<WebElement> condition, Duration timeout, WebDriver driver) {
 		WebDriverWait wait = new WebDriverWait(driver, timeout);
 		wait.until(condition);
+	}
+	
+	/*
+	 * make sure to have a date in the future
+	 */
+	private static String createFrontendDate() {
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		LocalDate ld = LocalDate.now();
+		ld = ld.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+		SimpleDateFormat targetSdf = new SimpleDateFormat("EEE MMM dd yyyy", Locale.UK);
+		Date now = Date.from(ld.atStartOfDay(defaultZoneId).toInstant());
+	        
+		String dateString = targetSdf.format(now);
+		dateString = dateString + " 00:00:00 GMT+0";
+		return dateString;
 	}
 
 }
