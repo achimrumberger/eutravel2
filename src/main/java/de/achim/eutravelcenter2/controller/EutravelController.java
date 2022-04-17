@@ -73,10 +73,6 @@ public class EutravelController {
 	public @ResponseBody List<ConnectionResponseDAO> requestConnection(@RequestBody ConnectionRequestDAO connections){
 		List<Map<String, String>> resultMap = new ArrayList<>();
 		List<ConnectionResponseDAO> resultList = new ArrayList<>();
-		System.out.println(connections.getStartStation());
-		System.out.println(connections.getDestinationStation());
-		System.out.println(connections.getTravelStartDate());
-		System.out.println(connections.getTravelStartTime());
 		try {
 			StationDAO startStationDAO = sdr.findByNameQuery(connections.getStartStation()).iterator().next();
 			StationDAO destinationStationDAO = sdr.findByNameQuery(connections.getDestinationStation()).iterator().next();

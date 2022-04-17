@@ -53,7 +53,7 @@ public class FrontendTest {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 		//how to interact with date picker???
 		//important: correct format for date
-		inputDate.sendKeys("Sat Mar 26 2022 00:00:00 GMT+0");
+		inputDate.sendKeys("Sun Jun 26 2022 00:00:00 GMT+0");
 		inputTime.sendKeys("13:00");
 		destinput.sendKeys("Stuttgart Hbf");
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -67,8 +67,7 @@ public class FrontendTest {
 		WebElement listRows = driver.findElement(By.xpath("//*[@name='result']"));
 		
 		List<WebElement> allDivChildren = listRows.findElements(By.tagName("div"));
-				
-		assertEquals(allDivChildren.size(),1);
+		assertEquals(allDivChildren.size(),16);
 
 		driver.close();
 		
