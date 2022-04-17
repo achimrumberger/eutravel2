@@ -65,9 +65,10 @@ public class FrontendTest {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 		
 		WebElement listRows = driver.findElement(By.xpath("//*[@name='result']"));
-		
-		List<WebElement> allDivChildren = listRows.findElements(By.tagName("div"));
-		assertEquals(allDivChildren.size(),16);
+		List<WebElement> cardList = listRows.findElements(By.className("card"));
+		//List<WebElement> allDivChildren = listRows.findElements(By.tagName("div"));
+		//should find 3 connections
+		assertEquals(cardList.size(),3);
 
 		driver.close();
 		
