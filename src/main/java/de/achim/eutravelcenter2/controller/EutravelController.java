@@ -98,7 +98,7 @@ public class EutravelController {
 			//tariffClass 2 = tariffTravellerType_1="E"??
 			String tariffClass = connections.getTariffClass();		
 			String numberOfTravellers = connections.getNumberOfTravellers();
-			//connect to db service4
+			//connect to db service
 			if(startStationDAO.getCountry().equalsIgnoreCase("de")) {
 				resultList = brs.getConnectionsFromDeutschBahn(startStationName, startX, startY, startStationID, 
 						destinationStationName, destinationX, destinationY, destinationStationID, 

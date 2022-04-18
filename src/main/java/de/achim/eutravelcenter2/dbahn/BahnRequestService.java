@@ -101,10 +101,6 @@ public class BahnRequestService {
 		BahnRequestTemplate brt = new BahnRequestTemplate(brDAO);
 		//brt.setData(brDAO);
 		String requestString = brt.makeRequestString();
-		System.out.println("**********************************");
-
-		System.out.println(requestString);
-		System.out.println("**********************************");
 
 		Response response = 
 				DiagnosticConnection.connect(requestString)
@@ -116,9 +112,6 @@ public class BahnRequestService {
 
 		//parse response
 
-//		Elements tbodies = BahnUtils.parseReiseauskuftResponse(response.parse());
-//		//List<String> dataList = this.getDataList(tbodies);
-//		resultList = BahnUtils.findDetailsLinks(tbodies);
 //		
 		Element overviewContainer = pdbr.findresultsOverviewContainer(response.parse());
 		Elements overview_updateC0 = pdbr.findOverviewUpdate(overviewContainer);
