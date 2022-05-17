@@ -64,3 +64,24 @@ test installation:
 **Navitia Token**
 get the Navitia-Token from [Navitia](https://navitia.io/en/subscription/) for free and copy it to the application.properties file 
 parameter is 'nativia.authtoken'
+
+
+**GraalVM**
+
+Install GraalVM on your local machine, forexample with sdkman
+```
+sdk install java 22.1.0.r11-grl
+```
+Use the it with this command:
+```
+sdk use java 22.1.0.r11-grl
+```
+Compile the application with the following command. Make sure you have cded in the directory where the pom resides. This my take a while 
+```
+mvn -Pnative -DskipTests package
+```
+and finally start it
+```
+./target/eutravelcenter2 
+```
+have fun
